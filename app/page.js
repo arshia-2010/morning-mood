@@ -18,7 +18,7 @@ export default function Home() {
     let userId = localStorage.getItem("morning-mood-user");
 
     if (!userId) {
-      userId = crypto.randomUUID();
+      userId = window.crypto.randomUUID();
       localStorage.setItem("morning-mood-user", userId);
     }
   }, []);
