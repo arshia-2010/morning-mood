@@ -13,6 +13,17 @@ export default function Home() {
   const [breakfasts, setBreakfasts] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  // 1 - Create anonynous user ID (it runs once)
+  useEffect(() => {
+    let userId = localStorage.getItem("morning-mood-user");
+
+    if (!userId) {
+      userId = crypto.randomUUID();
+      localStorage.setItem("morning-mood-user", userId);
+    }
+  }, []);
+
+  // 2 - Fetch breakfasts when mood changes
   useEffect(() => {
     if (!mood) return;
 
@@ -88,9 +99,11 @@ export default function Home() {
               <h3 className="font-semibold text-gray-800">
                 {item.name}
               </h3>
+
               <p className="text-sm text-gray-600 mt-1">
                 {item.description}
               </p>
+
               <div className="text-xs text-gray-500 mt-2">
                 ⏱ {item.prep_time} min · {item.diet_type}
               </div>
