@@ -2,18 +2,12 @@
 
 import { useEffect, useState } from "react";
 
-const moodMap = {
-  energetic: ["energetic", "focused"],
-  calm: ["calm", "fresh"],
-  tired: ["tired", "low"],
-};
-
 export default function Home() {
   const [mood, setMood] = useState(null);
   const [breakfasts, setBreakfasts] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // 1 - Create anonynous user ID (it runs once)
+  // 1 - Create anonymous user ID (runs once)
   useEffect(() => {
     let userId = localStorage.getItem("morning-mood-user");
 
@@ -30,7 +24,7 @@ export default function Home() {
     const fetchBreakfasts = async () => {
       setLoading(true);
 
-      const res = await fetch("/api/breakfasts");
+      const res = await fetch(`/api/breakfasts?mood=${mood}`);
       if (!res.ok) {
         setBreakfasts([]);
         setLoading(false);
@@ -38,12 +32,7 @@ export default function Home() {
       }
 
       const data = await res.json();
-
-      const filtered = data.filter((item) =>
-        item.mood_tags.some((tag) => moodMap[mood].includes(tag))
-      );
-
-      setBreakfasts(filtered);
+      setBreakfasts(data);
       setLoading(false);
     };
 
@@ -107,6 +96,13 @@ export default function Home() {
               <div className="text-xs text-gray-500 mt-2">
                 ⏱ {item.prep_time} min · {item.diet_type}
               </div>
+
+              {/* Save button (UI only for now) */}
+              <button
+                className="mt-3 text-sm px-3 py-1 rounded-md bg-amber-100 text-amber-900 hover:bg-amber-200 transition"
+              >
+                Save
+              </button>
             </div>
           ))}
         </div>
